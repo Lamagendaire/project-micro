@@ -1,0 +1,100 @@
+<html><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Microscope</title>
+        <link rel="stylesheet" type="text/css" href="microscope.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+    </head>
+    <body onload="init()" style="background: rgb(255, 255, 255); cursor: auto;">
+      <div class="images">
+        <img src="./img/2.png" alt="le microscope" id="micro" style="margin: 18.5% 21.5% 21.5% 24.5%; width: 2%; filter: blur(54px) contrast(100%) brightness(100%);">
+        <div id="cacheBlanc"></div>
+        <div id="lame-wrapper">
+          <div id="lame" class="ui-draggable ui-draggable-handle" style="left: 736px; top: 312.438px;">
+          </div>
+        </div>
+        <img src="./img/optique_full.png" alt="le microscope" class="optique" id="optique" style="background-color: rgba(0, 0, 0, 0);">
+        <img src="./img/optiquerouge.png" alt="le microscope" class="couleur" id="rouge" style="top: 0px; left: 0px; display: inline;">
+        <img src="./img/optiquejaune.png" alt="le microscope" class="couleur" id="jaune" style="top: -200%; left: -50%; display: inline;">
+        <img src="./img/optiquebleu.png" alt="le microscope" class="couleur" id="bleu" style="top: -200%; left: -50%; display: inline;">
+        <span id="zoom" style="filter: opacity(100%); display: inline;">4x</span>
+      </div>
+
+
+
+
+
+
+    <div id="calc">
+		<div id="calcContent">
+			<div id="ligne_affichage" style="display: inline;">
+				<p>Netteté (but 0):</p>
+				<input type="text" ondblclick="deplacerAffichage()" name="zone_affichage" id="zone_affichage">
+				<p>BigWheel = 5 netteté | SmallWheel = 1 netteté</p>
+			</div>
+			<div>
+
+			</div>
+			<div id="BigWheel" class="wheel">
+			  <p>BIG WHEEL ---&gt;</p>
+			  <input type="range" min="-10" max="10" value="-10" onchange="showBigValue(this.value)" id="Bigrangevalue">
+			  <input type="number" max="10" id="Bigrange" onchange="setBigValue(this.value)" min="0" style="display: inline;">
+			</div>
+
+			<div id="SmallWheel" class="wheel">
+			  <p>SMALL WHEEL-&gt;</p>
+			  <input type="range" min="-20" max="20" value="0" onchange="showSmallValue(this.value)" id="Smallrangevalue">
+			  <input type="number" min="-20" max="20" id="Smallrange" onchange="setSmallValue(this.value)" style="display: inline;">
+			</div>
+
+			<div id="ContWheel" class="wheel">
+			  <p>Contraste ----&gt;</p>
+			  <input type="range" min="0" max="200" value="100" onchange="showContValue(this.value)" id="Contrangevalue">
+			  <input type="number" min="0" max="200" id="Contrange" onchange="setContValue(this.value)" style="display: inline;">
+			</div>
+
+			<div id="LightWheel" class="wheel">
+			  <p>Luminosité ----&gt;</p>
+			  <input type="range" min="0" max="600" value="50" onchange="showLightValue(this.value)" id="Lightrangevalue">
+			  <input type="number" min="0" max="600" id="Lightrange" onchange="setLightValue(this.value)" style="display: inline;">
+			</div>
+
+			<div class="ligne_boutons">
+			  <p>Lame présente: </p><span id="lameplace">NON</span>
+			  <input type="button" onclick="lame()" class="bouton_classique" value="Placer/Retirer lame" id="placerLame">
+			</div>
+			<div class="ligne_boutons">
+			  <p>Déplacer la Lame: </p>
+			  <input type="button" onclick="changePosition('gauche')" class="bouton_classique" value="<">
+			  <input type="button" onclick="changePosition('haut')" class="bouton_classique" value="^">
+			  <input type="button" onclick="changePosition('bas')" class="bouton_classique" value="v">
+			  <input type="button" onclick="changePosition('droite')" class="bouton_classique" value=">">
+			</div>
+			<div class="ligne_boutons">
+					<p>Optique:</p>
+					<input type="button" onclick="changeOptique('rouge')" class="bouton_classique" value="rouge 4x">
+					<input type="button" onclick="changeOptique('jaune')" class="bouton_classique" value="jaune 10x">
+					<input type="button" onclick="changeOptique('bleu')" class="bouton_classique" value="bleu 40x">
+			</div>
+			<div class="ligne_boutons" id="objButton">
+				<input type="button" onclick="afficheValeur()" class="bouton_classique" id="gyugyu" value="Mode avec/sans valeurs">
+				<input type="button" onclick="afficheObjectifs()" class="bouton_classique" id="tuygft" value="objectifs de dévellopement">
+			</div>
+
+
+		<div id="objectifs" style="right: -100%;" onclick="afficheObjectifs()">
+		  <ul>
+			<li>- niveau 1: une série de boutons leur permet de réaliser les instructions de la fiche méthode, du branchement jusqu'à la mise au point parfaite au grossissement maximum.Boutons: prise, allumer, placer lame, grosse vis (fait bouger la platine + change la mise au point), petite vis (change la mise au point seulement), triple choix objectifs (impossible de faire la mise au point si les objectifs ne sont pas pris dans l'ordre + toujours commencer par le rouge), déplacer la lame, variateur (modification luminosité), diaphragme (modification contraste).
+			Des animations montrent ce qu'ils font, elles peuvent être très simples: brancher ; allumer (bouton vert) ; ce que l'on voit dans l'oculaire (dans un cercle) donc +/- lumineux +/- contrasté +/- grossi +/- flou (quand on passe à un objectif plus puissant le champ de vision ainsi que la lumière diminuent) ; bouger platine (+ compliqué?) ; changer objectif (couleur + plus ils sont puissants, plus ils sont longs et à mise au point proche de la lame, compliqué ?) ; placer lame ; bouger lame.</li>
+			<li>- niveau 2: différentes façons d'utiliser le simulateur. Libre: comprendre par essais et erreurs. Tutoriel: les instructions s'affichent, l'élève suit. Évaluation: arriver à faire le réglage en un temps donné sans erreur.</li>
+			<li>- niveau 3: plusieurs gestes sont possibles bon ou mauvais, par exemple prendre la lame par les bords ou à plein ''doigts'' ; salir les objectifs, forcer sur les vis.</li>
+			<li>- niveau 4: commencer avec un microscope à peu près réglé ou très déréglé (pas de lumière, pas de contraste); pouvoir choisir sa lame.</li>
+			<li>- niveau 5: quand la lame bouge je vois la préparation bouger d'autant plus vite que le grossissement est important.</li>
+			<li>- niveau 6: boutons sur l'image du microscope.</li>
+		  </ul>
+		</div>
+    </div>
+	<script src="microscope.js"></script>
+
+
+</div></body></html>
